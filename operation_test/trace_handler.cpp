@@ -4,7 +4,7 @@
 #include <bitset>
 #include "functions.h"
 #include <sstream>
-
+#include <vector>
 using namespace std;
 
 int debug = 0;
@@ -13,6 +13,8 @@ string bin_image;
 
 string operations;
 string r_source,r_target, r_dest;
+
+
 
 Instruction operating( std::string& rs, std::string& rt,std::string& rd,std::string& opcode);
 I_Instruction operating_I( std::string& rs, std::string& rt,std::string& imm,std::string& opcode);
@@ -132,7 +134,7 @@ Instruction operating( std::string& rs, std::string& rt,std::string& rd,std::str
 	Instruction instruction;
 	instruction.rs = rs;
  	instruction.rd = rd;
-    instruction.rt = rt;
+    	instruction.rt = rt;
 	instruction.opcode = opcode;
 	
 	if(stoi(opcode,0,2) == ADD) {
@@ -141,8 +143,8 @@ Instruction operating( std::string& rs, std::string& rt,std::string& rd,std::str
 		int rt_val = stoi(rt,0,2);
 		int result = rs_val + rt_val;
 		cout<< "Result :"<< result<< endl;
-        //instruction.rd = std::bitset<5>(result).to_string();
-		
+        	instruction.rd = std::bitset<5>(result).to_string();
+		cout<< "result for storing Rd:" << instruction.rd<<endl;		
 	}
 
 	if(stoi(opcode,0,2) == SUB){
@@ -150,20 +152,24 @@ Instruction operating( std::string& rs, std::string& rt,std::string& rd,std::str
 		int rt_val = stoi(rt,0,2);
 		int result = rs_val - rt_val;
 		cout<< "Result :"<< result<< endl;
-		
+		instruction.rd =std::bitset<5>(result).to_string();
+		cout<< "Result for storing Rd:" << instruction.rd<<endl;
 	}	
 	if(stoi(opcode,0,2) == MUL){
 		int rs_val = stoi(rs,0,2);
 		int rt_val = stoi(rt,0,2);
 		int result = rs_val * rt_val;
 		cout<< "Result :"<< result<< endl;
-		
+		instruction.rd = std:: bitset<5>(result).to_string();
+		cout<< "result for storing Rd:" << instruction.rd<<endl;
 	}
 	if(stoi(opcode,0,2) == OR){
 		int rs_val = stoi(rs,0,2);
 		int rt_val = stoi(rt,0,2);
 		int result = rs_val || rt_val;
 		cout<< "Result :"<< result<< endl;
+		instruction.rd = std:: bitset<5>(result).to_string();
+		cout<< "Result for storing Rd:"<< instruction.rd<<endl;
 		
 	}
 	if(stoi(opcode,0,2) == AND){
@@ -171,6 +177,8 @@ Instruction operating( std::string& rs, std::string& rt,std::string& rd,std::str
 		int rt_val = stoi(rt,0,2);
 		int result = rs_val && rt_val;
 		cout<< "Result :"<< result<< endl;
+		instruction.rd = std:: bitset<5>(result).to_string();
+		cout<< "Result for storing Rd:"<< instruction.rd<<endl;
 		
 	}
 	if(stoi(opcode,0,2) == XOR){
@@ -178,6 +186,8 @@ Instruction operating( std::string& rs, std::string& rt,std::string& rd,std::str
 		int rt_val = stoi(rt,0,2);
 		int result = rs_val ^ rt_val;
 		cout<< "Result :"<< result<< endl;
+		instruction.rd = std::bitset<5>(result).to_string();
+		cout<< "Result for storing Rd:"<< instruction.rd<<endl;
 		
 	}
 return instruction;
@@ -190,18 +200,18 @@ I_Instruction operating_I( std::string& rs, std::string& rt,std::string& imm,std
 	I_Instruction i_instruction;
 	i_instruction.rs = rs;
  	i_instruction.rt = rt;
-      i_instruction.imm = imm;
+        i_instruction.imm = imm;
 	i_instruction.opcode = opcode;
 	
 	if(stoi(opcode,0,2) == ADDI) {
-
+		
 		int rs_val = stoi(rs,0,2);
 		int rt_val = stoi(rt,0,2);
 		int imm_val = stoi(imm,0,2);
 		int result = imm_val + rs_val;
 		cout<< "Result :"<< result<< endl;
-        //instruction.rd = std::bitset<5>(result).to_string();
-		
+                i_instruction.rt = std::bitset<5>(result).to_string();
+		cout<< "Result for storing Rt:" << i_instruction.rt<<endl;	
 	}
 
 	if(stoi(opcode,0,2) == SUBI){
@@ -210,7 +220,9 @@ I_Instruction operating_I( std::string& rs, std::string& rt,std::string& imm,std
 		int imm_val = stoi(imm,0,2);
 		int result = rs_val - imm_val;
 		cout<< "Result :"<< result<< endl;
-		
+		i_instruction.rt = std:: bitset<5>(result).to_string();
+		cout<< "Result for storing Rt:"<< i_instruction.rt<<endl;
+
 	}	
 
 	if(stoi(opcode,0,2) == MULI){
@@ -219,7 +231,8 @@ I_Instruction operating_I( std::string& rs, std::string& rt,std::string& imm,std
 		int imm_val = stoi(imm,0,2);
 		int result = rs_val * imm_val;
 		cout<< "Result :"<< result<< endl;
-		
+		i_instruction.rt = std:: bitset<5>(result).to_string();
+		cout<< "Result for storing Rt:"<<i_instruction.rt<<endl;
 	}
 
 	if(stoi(opcode,0,2) == ORI){
@@ -228,7 +241,8 @@ I_Instruction operating_I( std::string& rs, std::string& rt,std::string& imm,std
 		int imm_val = stoi(imm,0,2);
 		int result = rs_val || imm_val;
 		cout<< "Result :"<< result<< endl;
-		
+		i_instruction.rt = std:: bitset<5>(result).to_string();
+		cout<< "Result for storing Rt:"<<i_instruction.rt<<endl;
 	}
 
 	if(stoi(opcode,0,2) == ANDI){
@@ -237,7 +251,8 @@ I_Instruction operating_I( std::string& rs, std::string& rt,std::string& imm,std
 		int imm_val = stoi(imm,0,2);
 		int result = rs_val && imm_val;
 		cout<< "Result :"<< result<< endl;
-		
+		i_instruction.rt = std:: bitset<5>(result).to_string();
+		cout<< "Result for storing Rt:"<<i_instruction.rt<<endl;
 	}
 
 	if(stoi(opcode,0,2) == XORI){
@@ -246,6 +261,8 @@ I_Instruction operating_I( std::string& rs, std::string& rt,std::string& imm,std
 		int imm_val = stoi(imm,0,2);
 		int result = rs_val ^ imm_val;
 		cout<< "Result :"<< result<< endl;
+		i_instruction.rt = std:: bitset<5>(result).to_string();
+		cout<< "Result for stroing Rt:"<<i_instruction.rt<<endl;
 		
 	}
 
