@@ -4,6 +4,7 @@
 #include <bitset>
 #include "functions.h"
 #include <sstream>
+#include <unordered_map>
 
 
 std::string op_directive(std::string opcode)
@@ -64,7 +65,10 @@ std::string op_directive(std::string opcode)
         return "JR";
         break;
     case HALT:
+	std::cout<< "HALT" <<std::endl;
         return "HALT";
+		
+		exit(0);
         break;
         
     default:
@@ -76,7 +80,10 @@ std::string op_directive(std::string opcode)
     return "Noting";
 }
 
-
+std::unordered_map<std::string, int> regi_map;
+void populateMap(std::string addr, int contents) {
+    regi_map[addr] = contents;
+}
 
 /****Operating function for R type ****/
 Instruction operating( std::string& rs, std::string& rt,std::string& rd,std::string& opcode){
@@ -87,73 +94,89 @@ Instruction operating( std::string& rs, std::string& rt,std::string& rd,std::str
 	instruction.opcode = opcode;
 	int sr_1 = R[stoi(rs)];
     int sr_2 = R[stoi(rt)];
-    int dest_r = 0;
+    //int dest_r = 0;
 
 	if(stoi(opcode,0,2) == ADD) {
-        std::cout <<"ADD:" <<rt << "RS:"<< rs<<std::endl;
+		ins_ct++;
+        //std::cout <<"ADD:" <<rt << "RS:"<< rs<<std::endl;
 
 		//int rs_val = stoi(rs,0,2);
 		//int rt_val = stoi(rt,0,2);
 		//int result = rs_val + rt_val;
         int result = sr_1 + sr_2;
         R[stoi(rd,0,2)] = result;
+		if(verbose) {
         std::cout<< "From Arr["<<stoi(rd)<<"]" << R[stoi(rd)]<<std::endl;
 		std::cout<< "Result :"<< result<< std::endl;
+		}
         //instruction.rd = std::bitset<5>(result).to_string();
 		
 	}
 
 	if(stoi(opcode,0,2) == SUB){
-        std::cout <<"SUB:" <<rt << "RS:"<< rs<<std::endl;
+       // std::cout <<"SUB:" <<rt << "RS:"<< rs<<std::endl;
 		//int rs_val = stoi(rs,0,2);
 		//int rt_val = stoi(rt,0,2);
 		//int result = rs_val - rt_val;
+		ins_ct++;
         int result = sr_1 + sr_2;
         R[stoi(rd)] = result;
+		if(verbose) {
         std::cout<< "From Arr["<<stoi(rd,0,2)<<"]" << R[stoi(rd)]<<std::endl;
 		std::cout<< "Result :"<< result<< std::endl;
+		}
 		
 	}	
 	if(stoi(opcode,0,2) == MUL){
+		ins_ct++;
         std::cout <<"MUL:" <<rt << "RS:"<< rs<<std::endl;
 		//int rs_val = stoi(rs,0,2);
 		//int rt_val = stoi(rt,0,2);
 		//int result = rs_val * rt_val;
         int result = sr_1 + sr_2;
         R[stoi(rd)] = result;
+		if(verbose) {
         std::cout<< "From Arr["<<stoi(rd)<<"]" << R[stoi(rd)]<<std::endl;
 		std::cout<< "Result :"<< result<< std::endl;
-		
+		}
 	}
 	if(stoi(opcode,0,2) == OR){
+		logi_ct++;
 		//int rs_val = stoi(rs,0,2);
 		//int rt_val = stoi(rt,0,2);
 		//int result = rs_val || rt_val;
         int result = sr_1 + sr_2;
         R[stoi(rd)] = result;
+		if(verbose) {
         std::cout<< "From Arr:" << R[stoi(rd)]<<std::endl;
 		std::cout<< "Result :"<< result<< std::endl;
+		}
 		
 	}
 	if(stoi(opcode,0,2) == AND){
+		logi_ct++;
 		//int rs_val = stoi(rs,0,2);
 		//int rt_val = stoi(rt,0,2);
 		//int result = rs_val && rt_val;
         int result = sr_1 + sr_2;
         R[stoi(rd)] = result;
+		if(verbose) {
         std::cout<< "From Arr:" << R[stoi(rd)]<<std::endl;
 		std::cout<< "Result :"<< result<< std::endl;
+		}
 		
 	}
 	if(stoi(opcode,0,2) == XOR){
+		logi_ct++;
 		//int rs_val = stoi(rs,0,2);
 		//int rt_val = stoi(rt,0,2);
 		//int result = rs_val ^ rt_val;
         int result = sr_1 + sr_2;
         R[stoi(rd)] = result;
+		if(verbose) {
         std::cout<< "From Arr:" << R[stoi(rd)]<<std::endl;
 		std::cout<< "Result :"<< result<< std::endl;
-		
+		}
 	}
 return instruction;
 	
@@ -171,84 +194,107 @@ I_Instruction I_operating( std::string& rs, std::string& rt,std::string& imm,std
     int rt_val = R[stoi(rt)];
 	
 	if(stoi(opcode,0,2) == ADDI) {
-
+		ins_ct++;
 		int imm_val = stoi(imm,0,2);
 		int result = imm_val + rt_val;
         R[stoi(rs)] = result;
+		if(verbose) {
 		std::cout<< "Result :"<< result<< std::endl;
+		}
         //instruction.rd = std::bitset<5>(result).to_string();
 		
 	}
 
 	if(stoi(opcode,0,2) == SUBI){
 	
+		ins_ct++;
 		int imm_val = stoi(imm,0,2);
 		int result = rt_val - imm_val;
         R[stoi(rs)] = result;
+		if(verbose) {
 		std::cout<< "Result :"<< result<< std::endl;
-		
+		}
 	}	
 
 	if(stoi(opcode,0,2) == MULI){
 	
-		int imm_val = stoi(imm,0,2);
+		ins_ct++;int imm_val = stoi(imm,0,2);
 		int result = rt_val * imm_val;
         R[stoi(rs)] = result;
+		if(verbose) {
 		std::cout<< "Result :"<< result<< std::endl;
-		
+		}
 	}
 
 	if(stoi(opcode,0,2) == ORI){
+		logi_ct++;
 	
 		int imm_val = stoi(imm,0,2);
 		int result = rt_val || imm_val;
 		R[stoi(rs)] = result;
+		if(verbose) {
         std::cout<< "Result :"<< result<< std::endl;
-		
+		}
 	}
 
 	if(stoi(opcode,0,2) == ANDI){
+		logi_ct++;
 	
 		int imm_val = stoi(imm,0,2);
 		int result = rt_val && imm_val;
         R[stoi(rs)] = result;
+		if(verbose) {
 		std::cout<< "Result :"<< result<< std::endl;
-		
+		}
 	}
 
 	if(stoi(opcode,0,2) == XORI){
+		logi_ct++;
 	
 		int imm_val = stoi(imm,0,2);
 		int result = rt_val ^ imm_val;
         R[stoi(rs)] = result;
+		if(verbose) {
 		std::cout<< "Result :"<< result<< std::endl;
-		
+		}
 	}
 
 	if(stoi(opcode,0,2) == LDW){
-	
+		mem_ac_ct++;
 		int imm_val = stoi(imm,0,2);
-		int address = rt_val + imm_val;
+		int rs_val =  stoi(rs,0,2);
+		int rs_contents = R[stoi(rs)]; //contents of Rs
+		int A = rs_contents + imm_val; //generate address
+		populateMap(std::to_string(A),rs_contents);
+		//int rt_val =  stoi(rt,0,2);
+		int result = rs_val + imm_val;
+		//int address = rt_val + imm_val;
 		//int contents = memory[address]; 
 		//rt_val = contents;
-		//std::cout<< "Result :"<< address << std::endl;
-		
+		R[stoi(rs)] = result;
+		if(verbose) {
+		std::cout<< "LDW Result :"<< result << std::endl;
+		}
 	}
 
 	if(stoi(opcode,0,2) == STW){
 	
+		mem_ac_ct++;
 		int imm_val = stoi(imm,0,2);
 		int result = rt_val + imm_val;
         R[stoi(rs)] = result;
+		if(verbose) {
 		std::cout<< "Result :"<< result<< std::endl;
-		
+		}
 	}
 
 	if(stoi(opcode,0,2) == BZ){
-	
-		int imm_val = stoi(imm,0,2);
+		ctrl_ct++;
+		//int imm_val = stoi(imm,0,2);
 		if(rs_val == 0){
+			if(verbose) {
 			std::cout<< "Result: "<<std::endl;
+			}
 		}
 	
 		
@@ -256,16 +302,20 @@ I_Instruction I_operating( std::string& rs, std::string& rt,std::string& imm,std
 
 	if(stoi(opcode,0,2) == BEQ){
 	
-		int imm_val = stoi(imm,0,2);
+		ctrl_ct++;
+		//int imm_val = stoi(imm,0,2);
 		if(rs_val == rt_val){
 		//need to implement logic branch
+		if(verbose) {
 		std::cout<< "Result :"<< std::endl;
+		}
 		}
 	}
 
 	if(stoi(opcode,0,2) == JR){
 		
-		int imm_val = stoi(imm,0,2);
+		ctrl_ct++;
+		//int imm_val = stoi(imm,0,2);
 		//load PC with the content of register RS
 		//need to implement the logic to update program counter (PC)
 		//based on the value of rs_val
@@ -273,9 +323,11 @@ I_Instruction I_operating( std::string& rs, std::string& rt,std::string& imm,std
 	}
 
 	if(stoi(opcode,0,2) == HALT){
-		
+		ctrl_ct++;
 		std::cout<< "Result: HALT!!! "<< std::endl;
-		
+		print_image_output();
+		//return -1;
+		exit(0);
 	}
 
 return i_instruction;
